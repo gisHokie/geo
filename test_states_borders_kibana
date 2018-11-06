@@ -1,0 +1,61 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v3.json",
+  "width": 960,
+  "height": 500,
+  "autosize": "none",
+
+"encode": {
+    "update": {
+      "fill": {"signal": "background"}
+    }
+  },
+ "signals": [
+    {
+      "name": "type",
+      "value": "mercator"
+    },
+    { "name": "scale", "value": 150 },
+    { "name": "graticuleDash", "value": 0},
+    { "name": "borderWidth", "value": 1 },
+    { "name": "background", "value": "#ffffff"},
+    { "name": "invert", "value": false }
+  ],
+
+
+  "data": [
+    {
+      "name": "states",
+      "url": "https://raw.githubusercontent.com/gisHokie/geo/master/tl_2017_us_state.json",
+      "format": {"type": "json", "feature": "states"}
+    }
+  ],
+
+  "projections": [
+    {
+      "name": "projection",
+      "type": "albersUsa"
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "shape",
+      "from": {"data": "states"},
+      "encode": {
+        "update": {
+          "strokeWidth": {"signal": "+borderWidth"},
+          "stroke": {"value": "#0099ff"},
+          "zindex": {"value": 0}
+        },
+        "hover": {
+          "strokeWidth": {"signal": "+borderWidth + 1"},
+          "stroke": {"value": "firebrick"},
+          "zindex": {"value": 1}
+        }
+      },
+      "transform": [
+        { "type": "geoshape", "projection": "projection" }
+      ]
+    }
+  ]
+}
