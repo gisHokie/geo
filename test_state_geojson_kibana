@@ -1,0 +1,35 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v3.json",
+  "width": 960,
+  "height": 500,
+  "autosize": "none",
+
+  "data": [
+    {
+      "name": "states",
+      "url": "https://raw.githubusercontent.com/gisHokie/geo/master/tl_2017_us_state.json",
+      "format": {"type": "json", "feature": "states"}
+    }
+  ],
+
+  "projections": [
+    {
+      "name": "projection",
+      "type": "albersUsa"
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "shape",
+      "from": {"data": "states"},
+      "encode": {
+        "update": { "fill": {"value": "blue"} },
+        "hover": { "fill": {"value": "red"} }
+      },
+      "transform": [
+        { "type": "geoshape", "projection": "projection" }
+      ]
+    }
+  ]
+}
