@@ -1,0 +1,121 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "width": 960,
+  "height": 500,
+  "autosize": "none",
+
+"encode": {
+    "update": {
+      "fill": {"signal": "background"}
+    }
+  },
+ "signals": [
+    {
+      "name": "type",
+      "value": "mercator"
+    },
+    { "name": "borderWidth", "value": 1 },
+    { "name": "background", "value": "#ffffff"},
+        { "name": "borderCountyWidth", "value": 1 },
+    { "name": "backgroundCounty", "value": "#ffffff"}
+ 
+  ],
+
+
+  "data": [
+  
+    {
+      "name": "capitals",
+      "url": "https://raw.githubusercontent.com/vega/vega/master/docs/data/us-state-capitals.json",
+      "transform":[{
+        "type": "geopoint",
+        "projection": "projection",
+        "fields": ["lon", "lat"]
+      }]
+    },
+    {
+      "name": "counties",
+      "url": "https://raw.githubusercontent.com/gisHokie/geo/master/county.json",
+      "format": {"type": "topojson", "feature": "counties"}
+    },
+    {
+      "name": "states",
+      "url": "https://raw.githubusercontent.com/gisHokie/geo/master/tl_2017_us_state.json",
+      "format": {"type": "json", "feature": "states"}
+    }
+  ],
+
+  "projections": [
+    {
+      "name": "projection",
+      "type": "albersUsa"
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "color",
+      "type": "quantize",
+      "domain": [0, 0.15],
+      "range": {"scheme": "blues", "count": 7}
+    }
+  ],
+  
+  "marks": [
+        {
+      "type": "symbol",
+      "interactive": false,
+      "from": {"data": "capitals"},
+      "encode": {
+        "enter": {
+          "shape": {"value": "M0,.5L.6,.8L.5,.1L1,-.3L.3,-.4L0,-1L-.3,-.4L-1,-.3L-.5,.1L-.6,.8L0,.5Z"},
+          "fill": {"value": "#639"}
+        },
+        "update": {
+          "x": {"field": "x"},
+          "y": {"field": "y"}
+        }
+      }
+    },
+
+ {
+      "type": "shape",
+      "from": {"data": "counties"},
+      "encode": {
+        "update": {
+          "strokeWidth": {"signal": "+borderCountyWidth"},
+          "stroke": {"value": "#f4428c"},
+          "zindex": {"value": 0}
+        },
+        "hover": {
+          "strokeWidth": {"signal": "+borderCountyWidth + 1"},
+          "stroke": {"value": "firebrick"},
+          "zindex": {"value": 1}
+        }
+      },
+      "transform": [
+        { "type": "geoshape", "projection": "projection" }
+      ]
+    },
+
+	{
+      "type": "shape",
+      "from": {"data": "states"},
+      "encode": {
+        "update": {
+          "strokeWidth": {"signal": "+borderWidth"},
+          "stroke": {"value": "#0099ff"},
+          "zindex": {"value": 0}
+        },
+        "hover": {
+          "strokeWidth": {"signal": "+borderWidth + 1"},
+          "stroke": {"value": "firebrick"},
+          "zindex": {"value": 1}
+        }
+      },
+      "transform": [
+        { "type": "geoshape", "projection": "projection" }
+      ]
+    }
+  ]
+}
